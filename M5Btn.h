@@ -11,10 +11,6 @@
 #define TFT_W TFT_HEIGHT
 #define TFT_H TFT_WIDTH
 
-// Parameter scheinen M5Stack-gerätespezifisch zu sein (wie schnell Tastendrücken erkannt wird)
-#define SHORT 300   // Zeit in ms, bis zu der ein Kurzdruck erkannt wird
-#define LONG  500   // ZZeit in ms, ab der ein Langdruck erkannt wird
-
 // Adresse des M5Faces-Encoders
 #define Faces_Encoder_I2C_ADDR     0X5E
 

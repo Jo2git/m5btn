@@ -1,13 +1,13 @@
 
 {
-  "name": "z21lib",
+  "name": "m5btn",
   "version": "1.0.0",
-  "description": "Library to access Z21-like digital command stations (Z21, DR5000, MD XP)",
-  "keywords": "z21, dr5000, api",
+  "description": "Library for M5Stack to access 3 hw buttons and the rotary encoder",
+  "keywords": "",
   "repository":
   {
     "type": "git",
-    "url": "https://github.com/Moba160/z21lib.git"
+    "url": "https://github.com/Moba160/m5btn.git"
   },
   "authors":
   [

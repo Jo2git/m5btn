@@ -2,6 +2,28 @@
 
 #define NumHwButtons 3 // A, B, C
 
+// Parameter scheinen M5Stack-gerätespezifisch zu sein (wie schnell Tastendrücken erkannt wird)
+#define SHORT 300   // Zeit in ms, bis zu der ein Kurzdruck erkannt wird
+#define LONG  500   // ZZeit in ms, ab der ein Langdruck erkannt wird
+
+// x-Achsen der drei Hardwarebuttons A, B, C
+#define xA TFT_W/4-12
+#define xB TFT_W/2
+#define xC TFT_W/4*3+12
+
+// Höhe jeder Buttonbeschriftungen
+#define btnHeight 20
+
+// Textgröße Buttonbeschriftungen
+#define textSize 2
+
+// Abstand der Buttonbeschriftungen untereinander horizontal (x) und vertikal (y)
+#define btnDisty 2
+
+// y-Line der ersten (yBtn1, Kurzclick) und zweiten (yBtn2, Langclick) Buttonbar
+#define yBtn1 TFT_H-1-btnDisty-btnHeight/2
+#define yBtn2 yBtn1-btnHeight-btnDisty
+
 String M5Btn::functions[NumButtons]; // NumButtons = logische Buttons, auch Kombinationen
 TFT_eSPI* M5Btn::tft;
 bool M5Btn::buttonBarActive = false;
@@ -25,27 +47,6 @@ static char buf[4];
 void M5Btn::begin(TFT_eSPI* tft) {
     M5Btn::tft = tft;
 }
-
-// ----------------------------------------------------------------------------------------------------
-// 
-
-// x-Achsen der drei Hardwarebuttons A, B, C
-#define xA TFT_W/4-12
-#define xB TFT_W/2
-#define xC TFT_W/4*3+12
-
-// Höhe jeder Buttonbeschriftungen
-#define btnHeight 20
-
-// Textgröße Buttonbeschriftungen
-#define textSize 2
-
-// Abstand der Buttonbeschriftungen untereinander horizontal (x) und vertikal (y)
-#define btnDisty 2
-
-// y-Line der ersten (yBtn1, Kurzclick) und zweiten (yBtn2, Langclick) Buttonbar
-#define yBtn1 TFT_H-1-btnDisty-btnHeight/2
-#define yBtn2 yBtn1-btnHeight-btnDisty
 
 // ----------------------------------------------------------------------------------------------------
 //
