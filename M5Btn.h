@@ -1,11 +1,12 @@
 #ifndef M5BTN_H
 #define M5BTN_H
 
-#include <Arduino.h>
 #include <M5Stack.h>
+#include <Arduino.h>
 
 #define btnBGColor TFT_BLUE
 #define btnFGColor TFT_WHITE
+#define screenBgColor TFT_BLACK
 
 // scheinbar verdreht
 #define TFT_W TFT_HEIGHT

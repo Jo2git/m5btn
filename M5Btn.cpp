@@ -39,8 +39,6 @@ long lastReleased[NumHwButtons];
 long lastPressed[NumHwButtons];
 bool doublePress = false;
 
-static char buf[4];
-
 // ----------------------------------------------------------------------------------------------------
 // 
 
@@ -63,6 +61,8 @@ String M5Btn::getFunction(ButtonType button) {
 
 void M5Btn::clearFunctions() {
   for (int i=0; i<NumButtons; i++) functions[i] = "";
+  // Bereich löschen
+  tft->fillRect(0, yBtn2 - btnHeight/2, TFT_W, TFT_H-(yBtn2) - 1, screenBgColor);
 }
 
 // ----------------------------------------------------------------------------------------------------
