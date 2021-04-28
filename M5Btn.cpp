@@ -67,6 +67,30 @@ void M5Btn::clearFunctions() {
 
 // ----------------------------------------------------------------------------------------------------
 //
+// Alternative: via FastLED:
+// http://community.m5stack.com/topic/665/unexpected-behavior-on-m5stack-fire-leds/2
+
+void M5Btn::led(int ledIndex, int red, int green, int blue) {
+	Wire.beginTransmission(Faces_Encoder_I2C_ADDR);
+	Wire.write(ledIndex);
+	Wire.write(red);
+	Wire.write(green);
+	Wire.write(blue);
+	Wire.endTransmission();
+}
+
+// ----------------------------------------------------------------------------------------------------
+// 
+
+void M5Btn::ledRing(int red, int green, int blue, int delay_ms) {
+	for(int ledIndex=0;ledIndex<12;ledIndex++) {
+        led(ledIndex, red, green, blue);
+		delay(delay_ms);
+    }
+}
+
+// ----------------------------------------------------------------------------------------------------
+//
 
 void M5Btn::activateButton(ButtonType btn, int width, int x, int y) {
     if (functions[btn] == 0) return;

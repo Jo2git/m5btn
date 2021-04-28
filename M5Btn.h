@@ -27,6 +27,9 @@ class M5Btn {
         static void setFunction(ButtonType button, String function);
         static String getFunction(ButtonType button);
 
+        static void led(int ledIndex, int red, int green, int blue);
+        static void ledRing(int red, int green, int blue, int delay_ms);
+
         static void begin(TFT_eSPI* tft);
         static void loop();
 
