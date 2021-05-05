@@ -1,33 +1,10 @@
 #include "M5Btn.h"
 
-#define NumHwButtons 3 // A, B, C
-
 // Parameter scheinen M5Stack-gerätespezifisch zu sein (wie schnell Tastendrücken erkannt wird)
 #define SHORT 300   // Zeit in ms, bis zu der ein Kurzdruck erkannt wird
 #define LONG  500   // ZZeit in ms, ab der ein Langdruck erkannt wird
 
-// x-Achsen der drei Hardwarebuttons A, B, C
-#define xA TFT_W/4-12
-#define xB TFT_W/2
-#define xC TFT_W/4*3+12
-
-// Höhe jeder Buttonbeschriftungen
-#define btnHeight 20
-
-// Textgröße Buttonbeschriftungen
-#define textSize 2
-
-// Abstand der Buttonbeschriftungen untereinander horizontal (x) und vertikal (y)
-#define btnDisty 2
-
-// y-Line der ersten (yBtn1, Kurzclick) und zweiten (yBtn2, Langclick) Buttonbar
-#define yBtn1 TFT_H-1-btnDisty-btnHeight/2
-#define yBtn2 yBtn1-btnHeight-btnDisty
-
-String M5Btn::functions[NumButtons]; // NumButtons = logische Buttons, auch Kombinationen
 TFT_eSPI* M5Btn::tft;
-bool M5Btn::buttonBarActive = false;
-
 
 extern void buttonPressed(M5Btn::ButtonType btn);
 
@@ -44,25 +21,6 @@ bool doublePress = false;
 
 void M5Btn::begin(TFT_eSPI* tft) {
     M5Btn::tft = tft;
-}
-
-// ----------------------------------------------------------------------------------------------------
-//
-
-void M5Btn::setFunction(ButtonType button, String function) {
-    if (button >= NumButtons) return;
-    functions[button] = function;
-}
-
-String M5Btn::getFunction(ButtonType button) {
-  if (button < NumButtons) return functions[button];
-  return ""; // Drehknopf etc.
-}
-
-void M5Btn::clearFunctions() {
-  for (int i=0; i<NumButtons; i++) functions[i] = "";
-  // Bereich löschen
-  tft->fillRect(0, yBtn2 - btnHeight/2, TFT_W, TFT_H-(yBtn2) - 1, screenBgColor);
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -87,40 +45,6 @@ void M5Btn::ledRing(int red, int green, int blue, int delay_ms) {
         led(ledIndex, red, green, blue);
 		delay(delay_ms);
     }
-}
-
-// ----------------------------------------------------------------------------------------------------
-//
-
-void M5Btn::activateButton(ButtonType btn, int width, int x, int y) {
-    if (functions[btn] == 0) return;
-    tft->fillRoundRect(x - width/2, y-btnHeight/2, width, btnHeight, 4, btnBGColor);
-    tft->drawString(functions[btn], x, y, textSize);
-}
-
-void M5Btn::setButtonBarActive(bool active) {
-
-    M5Btn::buttonBarActive = active;
-
-    bool doubleButtonsExist = true;
-    for (int i=6; i<NumButtons-1; i++)
-        doubleButtonsExist = doubleButtonsExist && (functions[i] != 0);
-
-    int btnWidth = doubleButtonsExist ? TFT_W/8 : TFT_W/4;
-
-    tft->setTextColor(btnFGColor, btnBGColor);
-    tft->setTextDatum(CC_DATUM);
-
-    // untere Reihe: kurzer Druck
-    activateButton(ButtonType::A, btnWidth, xA, yBtn1);
-    activateButton(ButtonType::B, btnWidth, xB, yBtn1);
-    activateButton(ButtonType::C, btnWidth, xC, yBtn1);
-
-    // obere Reihe: langer Druck
-    activateButton(ButtonType::AA, btnWidth, xA, yBtn2);
-    activateButton(ButtonType::BB, btnWidth, xB, yBtn2);
-    activateButton(ButtonType::CC, btnWidth, xC, yBtn2);
-
 }
 
 // ----------------------------------------------------------------------------------------------------
