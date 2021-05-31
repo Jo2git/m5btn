@@ -40,7 +40,7 @@ class Softkey {
     bool isActivated() { return activated; }
 
     String getCaption() { return caption; }
-    void setCaption(String caption) { this->caption = caption; }
+    Softkey* setCaption(String caption) { this->caption = caption; return this; }
     M5Btn::ButtonType getButton() { return hwButton; }
     int getLayer() { return layer; }
 
