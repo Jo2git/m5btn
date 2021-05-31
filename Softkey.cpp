@@ -33,7 +33,7 @@ Softkey::Softkey(TFT_eSPI* tft, int style, String caption, M5Btn::ButtonType hwB
           break;
         default: ; // um Warnungen zu vermeiden
       }
-    }
+}
 
 // ----------------------------------------------------------------------------------------------------
 //
