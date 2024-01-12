@@ -2,7 +2,8 @@
 
 // Parameter scheinen M5Stack-gerätespezifisch zu sein (wie schnell Tastendrücken erkannt wird)
 #define SHORT 300   // Zeit in ms, bis zu der ein Kurzdruck erkannt wird
-#define LONG  500   // ZZeit in ms, ab der ein Langdruck erkannt wird
+#define LONG  500   // Zeit in ms, ab der ein Langdruck erkannt wird
+#define DOUBLE 400  // Zeit für Doppeldruck
 
 TFT_eSPI* M5Btn::tft;
 
@@ -125,7 +126,7 @@ void M5Btn::loop() {
 
         /* LONG?
         <------------> größer SHORT 
-        |                  | < gleich LONG
+        |                  | > gleich LONG
         |~~~~~~~~~~~~~~~~~~|
      ---|             |    |------- 
                         v Event: long pressed
@@ -149,6 +150,8 @@ int oldButtonState = buttonState;
 boolean _buttonDown = false;
 long rotaryKnobLastPressed;
 bool rotaryKnobLongNotified = false;
+bool rotaryKnobPressedNotified = false; // wurde gedrückt merken um Doppeldruck zu erkennen  
+bool rotaryKnobPressedNotified2 = false; // wurde 2. mal gedrückt  
 
 // Drehreglerstellung
 int _min = 0;
@@ -208,27 +211,57 @@ void M5Btn::encoderLoop() {
   if (_value > _max) _value = _max;
 
   // Button gedrückt?
-  bool wasReleased = buttonState == HIGH && oldButtonState == LOW; 
-  bool wasPressed =  buttonState == LOW  && oldButtonState == HIGH;
-  bool isPressed =   buttonState == LOW;
+  bool wasReleased = buttonState == HIGH && oldButtonState == LOW;  // 10-Flanke
+  bool wasPressed =  buttonState == LOW  && oldButtonState == HIGH; // 01-Flanke
+  bool isPressed =   buttonState == LOW;                            // gedrückt
   oldButtonState =   buttonState;
 
   if (wasPressed) {
     rotaryKnobLastPressed = millis();
     rotaryKnobLongNotified = false;
-  }
-  
-  // Drehknopf kurz gedrückt?
-  if (wasReleased) {
-    if (millis() - rotaryKnobLastPressed <= SHORT) {
-        buttonPressed(ButtonType::RotaryKnob);  
-    }
+    rotaryKnobPressedNotified2 = rotaryKnobPressedNotified;
   }
 
+  if (wasReleased) rotaryKnobPressedNotified2 = false; // beim Loslassen immer rücksetzen
+
+
+  // Doppeldruckerkennung rückstellen - Kurzdruck ausgeben, falls kein Doppeldruck erkannt wurde
+  if (rotaryKnobPressedNotified && !rotaryKnobPressedNotified2)
+  {
+    if ((millis() - rotaryKnobLastPressed) > DOUBLE) {
+       buttonPressed(ButtonType::RotaryKnob);
+       rotaryKnobPressedNotified = false;
+    }
+  }
+  
+  // Drehknopf kurz oder doppelt gedrückt?
+  if (wasReleased && millis() - rotaryKnobLastPressed <= SHORT && millis() - rotaryKnobLastPressed > 20) // Entprellung
+  {
+    if (!rotaryKnobPressedNotified)
+    {
+      rotaryKnobPressedNotified = true;
+    }
+    else
+    {
+      buttonPressed(ButtonType::RotaryKnobDouble);
+      rotaryKnobPressedNotified = false;  
+    }
+  }
+  
   // Drehknopf lang gedrückt?
-  if (isPressed && (millis() - rotaryKnobLastPressed) >= LONG && !rotaryKnobLongNotified) {
-    buttonPressed(ButtonType::RotaryKnobLong);
-    rotaryKnobLongNotified = true;
+  if (isPressed && millis() - rotaryKnobLastPressed >= LONG && !rotaryKnobLongNotified)
+  {
+    if (!rotaryKnobPressedNotified)
+    { 
+      buttonPressed(ButtonType::RotaryKnobLong);
+      rotaryKnobLongNotified = true;
+    }
+    else
+    {
+      buttonPressed(ButtonType::RotaryKnobDoubleLong);
+      rotaryKnobPressedNotified = false;
+      rotaryKnobLongNotified = true;
+    }
   }
 
 }

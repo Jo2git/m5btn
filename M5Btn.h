@@ -22,7 +22,7 @@ class M5Btn {
 
     public:
 
-        enum ButtonType {A, B, C, AA, BB, CC, AB, AC, BA, BC, CA, CB, RotaryKnob, RotaryKnobLong, RotaryLeft, RotaryRight };
+        enum ButtonType {A, B, C, AA, BB, CC, AB, AC, BA, BC, CA, CB, RotaryKnob, RotaryKnobLong, RotaryKnobDouble, RotaryKnobDoubleLong, RotaryLeft, RotaryRight };
         
         static void led(int ledIndex, int red, int green, int blue);
         static void ledRing(int red, int green, int blue, int delay_ms);
